@@ -9,7 +9,7 @@ public unsafe class GameObjectVfx : IDisposable
     internal IGameObject source;
     internal Vector3 scale;
     internal Vector4 color;
-    internal VfxData* data;
+    public VfxData* data;
 
     public static GameObjectVfx Create(string path, IGameObject target, IGameObject source, Vector3 scale, Vector4 color)
     {

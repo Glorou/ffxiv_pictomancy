@@ -32,6 +32,8 @@ public static unsafe class VfxFunctions
     public const string RotateMatrixSig = "E8 ?? ?? ?? ?? 4C 8D 76 20";
     public delegate void RotateMatrixDelegate(Matrix4x4* matrix, float rotation);
     public static RotateMatrixDelegate RotateMatrix;
+    
+    
 
     internal static void Initialize()
     {
@@ -43,4 +45,6 @@ public static unsafe class VfxFunctions
         UpdateVfxColor = Marshal.GetDelegateForFunctionPointer<UpdateVfxColorDelegate>(PictoService.SigScanner.ScanText(UpdateVfxColorSig));
         RotateMatrix = Marshal.GetDelegateForFunctionPointer<RotateMatrixDelegate>(PictoService.SigScanner.ScanText(RotateMatrixSig));
     }
+    
+    
 }

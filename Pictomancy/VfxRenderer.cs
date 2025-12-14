@@ -29,7 +29,8 @@ public class VfxRenderer : IDisposable
 
     InterframeResourceTracker<Vfx> trackedVfx;
     InterframeResourceTracker<GameObjectVfx> trackedGOVfx;
-
+    
+    public Vfx Address = null;
     public VfxRenderer()
     {
         trackedVfx = new();
@@ -97,6 +98,11 @@ public class VfxRenderer : IDisposable
     {
         CreateOrUpdateVfx(id, CommonPath(name), target, target, scale ?? Vector3.One, color ?? White);
     }
+    
+    public void SpawnPointLight(string id,  Vector3 origin, Vector3? scale = null, float rotation = 0, Vector4? color = null)
+    {
+        CreateOrUpdateVfx(id, "vfx/common/eff/fish_kemi00f.avfx", origin, scale ?? Vector3.One, rotation, color ?? White);
+    }
 
     private void CreateOrUpdateVfx(string id, string path, Vector3 position, Vector3 scale, float rotation, Vector4 color)
     {
@@ -110,9 +116,12 @@ public class VfxRenderer : IDisposable
         }
         else
         {
-            trackedVfx.TouchNew(key, Vfx.Create(path, position, scale, rotation, color));
+            var temp = Vfx.Create(path, position, scale, rotation, color);
+            Address = temp;
+            trackedVfx.TouchNew(key, temp);
         }
     }
+
 
     private void CreateOrUpdateVfx(string id, string path, IGameObject target, IGameObject source, Vector3 scale, Vector4 color)
     {
@@ -125,6 +134,7 @@ public class VfxRenderer : IDisposable
         }
         else
         {
+
             trackedGOVfx.TouchNew(key, GameObjectVfx.Create(path, target, source, scale, color));
         }
     }
