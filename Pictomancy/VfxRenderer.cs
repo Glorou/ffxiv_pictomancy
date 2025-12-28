@@ -30,7 +30,6 @@ public class VfxRenderer : IDisposable
     InterframeResourceTracker<Vfx> trackedVfx;
     InterframeResourceTracker<GameObjectVfx> trackedGOVfx;
     
-    public Vfx Address = null;
     public VfxRenderer()
     {
         trackedVfx = new();
@@ -132,9 +131,7 @@ public class VfxRenderer : IDisposable
         }
         else
         {
-            var temp = Vfx.Create(path, position, scale, rotation, color);
-            Address = temp;
-            trackedVfx.TouchNew(key, temp);
+            trackedVfx.TouchNew(key, Vfx.Create(path, position, scale, rotation, color));
         }
     }
 

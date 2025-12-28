@@ -9,7 +9,7 @@ public unsafe class Vfx : IDisposable
     internal Vector3 size;
     internal float rotation;
     internal Vector4 color;
-    public VfxData* data;
+    internal VfxData* data;
     internal bool pctOwned = false;
 
     public static Vfx Create(string path, Vector3 position, Vector3 size, float rotation, Vector4? color = null)
