@@ -1,6 +1,6 @@
-﻿<Project Sdk="Dalamud.NET.Sdk/13.1.0">
+<Project Sdk="Dalamud.NET.Sdk/14.0.0">
   <PropertyGroup>
-    <Authors>sourpuh, Karou</Authors>
+    <Authors>sourpuh</Authors>
     <Version>0.0.2</Version>
     <Description>A library for drawing 3D overlays in Dalamud plugins</Description>
     <PackageProjectUrl>https://github.com/sourpuh/ffxiv_pictomancy</PackageProjectUrl>
