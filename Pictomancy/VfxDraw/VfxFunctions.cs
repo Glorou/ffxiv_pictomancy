@@ -1,6 +1,10 @@
 ﻿using SourOmen.Structs;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using System.Text;
+using Dalamud.Hooking;
+using Dalamud.Plugin.Services;
+using FFXIVClientStructs.FFXIV.Client.System.Resource.Handle;
 
 namespace Pictomancy.VfxDraw;
 public static unsafe class VfxFunctions
@@ -32,11 +36,34 @@ public static unsafe class VfxFunctions
     public const string RotateMatrixSig = "E8 ?? ?? ?? ?? 4C 8D 76 20";
     public delegate void RotateMatrixDelegate(Matrix4x4* matrix, float rotation);
     public static RotateMatrixDelegate RotateMatrix;
+
+
     
+    public const string VfxEditor = "E8 ?? ?? ?? ?? 48 8B 5C 24 ?? 48 85 C0 48 8B 6C 24";
+    public static Hook<VfxSetupDelegate>? _vfxSetup;
+
+    public delegate nint VfxSetupDelegate(void* core, nint unk1, byte* filePath, byte* vfxFileResource, uint fileSize, ResourceHandle* resourceHandle, uint unk2);
+
+    private static unsafe nint UnbindVfx(void* core, nint unk1, byte* filePath, byte* vfxFileResource, uint fileSize, ResourceHandle* resourceHandle, uint unk2)
+    {
+        var temp = MemoryMarshal.CreateReadOnlySpanFromNullTerminated(filePath);
+        var path = Encoding.UTF8.GetString(temp);
+        if (string.Equals(path, "vfx/common/eff/fish_kemi00f.avfx"))
+        {
+            vfxFileResource[0x1074 + 0] = 0xff;
+            vfxFileResource[0x1074 + 1] = 0xff;
+            vfxFileResource[0x1074 + 2] = 0xff;
+            vfxFileResource[0x1074 + 3] = 0xff;
+                
+        }
+        byte* pointer = (byte*)_vfxSetup?.Original(core, unk1, filePath, vfxFileResource, fileSize, resourceHandle, unk2);
+        return (IntPtr)pointer;
+    }
     
 
-    internal static void Initialize()
+    internal static void Initialize(IGameInteropProvider? interop)
     {
+        
         VfxInitDataCtor = Marshal.GetDelegateForFunctionPointer<VfxInitDataCtorDelegate>(PictoService.SigScanner.ScanText(VfxInitDataCtorSig));
         CreateVfx = Marshal.GetDelegateForFunctionPointer<CreateVfxDelegate>(PictoService.SigScanner.ScanText(CreateVfxSig));
         CreateGameObjectVfxInternal = Marshal.GetDelegateForFunctionPointer<CreateGameObjectVfxDelegate>(PictoService.SigScanner.ScanText(CreateGameObjectVfxSig));
@@ -44,6 +71,12 @@ public static unsafe class VfxFunctions
         UpdateVfxTransform = Marshal.GetDelegateForFunctionPointer<UpdateVfxTransformDelegate>(PictoService.SigScanner.ScanText(UpdateVfxTransformSig));
         UpdateVfxColor = Marshal.GetDelegateForFunctionPointer<UpdateVfxColorDelegate>(PictoService.SigScanner.ScanText(UpdateVfxColorSig));
         RotateMatrix = Marshal.GetDelegateForFunctionPointer<RotateMatrixDelegate>(PictoService.SigScanner.ScanText(RotateMatrixSig));
+        if (interop != null)
+        {
+            _vfxSetup = interop.HookFromSignature<VfxSetupDelegate>(VfxEditor, UnbindVfx);
+            _vfxSetup.Enable();
+        }
+        {}
     }
     
     

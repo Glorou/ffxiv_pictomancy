@@ -28,10 +28,10 @@ public class PictoService
     internal static PctDrawList DrawList;
     internal static PctDrawHints Hints;
 
-    public static void Initialize(IDalamudPluginInterface pluginInterface)
+    public static void Initialize(IDalamudPluginInterface pluginInterface, IGameInteropProvider? interop = null)
     {
         InitializeDxRenderer(pluginInterface);
-        InitializeVfxRenderer(pluginInterface);
+        InitializeVfxRenderer(pluginInterface, interop);
     }
 
     public static void InitializeDxRenderer(IDalamudPluginInterface pluginInterface)
@@ -41,11 +41,11 @@ public class PictoService
         _addonClipper = new();
     }
 
-    public static void InitializeVfxRenderer(IDalamudPluginInterface pluginInterface)
+    public static void InitializeVfxRenderer(IDalamudPluginInterface pluginInterface, IGameInteropProvider? interop = null)
     {
         InitializePluginServices(pluginInterface);
         _vfxRenderer = new();
-        VfxFunctions.Initialize();
+        VfxFunctions.Initialize(interop);
         Framework.Update += Update;
     }
 

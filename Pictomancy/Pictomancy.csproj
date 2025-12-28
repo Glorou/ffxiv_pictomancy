@@ -1,11 +1,12 @@
-<Project Sdk="Dalamud.NET.Sdk/14.0.0">
+<Project Sdk="Dalamud.NET.Sdk/14.0.1">
   <PropertyGroup>
-    <Authors>sourpuh</Authors>
+    <Authors>sourpuh, Karou</Authors>
     <Version>0.0.2</Version>
     <Description>A library for drawing 3D overlays in Dalamud plugins</Description>
     <PackageProjectUrl>https://github.com/sourpuh/ffxiv_pictomancy</PackageProjectUrl>
     <Platforms>x64</Platforms>
     <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup>
